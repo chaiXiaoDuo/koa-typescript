@@ -5,7 +5,6 @@
 ****************************************/
 import Router from 'koa-router'
 import SystemServer from '../server/system.server'
-import query from '../utils/sql-config'
 import * as systemInterface from '../interface/system.interface'
 export default class Sys extends SystemServer{
     
