@@ -9,11 +9,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 * 2018-08-06 14:32:07
 ****************************************/
 const Utils_1 = __importDefault(require("./Utils"));
-const u = new Utils_1.default();
-class Base {
+class Base extends Utils_1.default {
     constructor() {
+        super();
         this.privateKey = "$cxd$";
     }
+    /**
+     * 检查权限
+     * @param {string} token
+     */
     checkAuth(token) {
         if (token) {
             return true;
@@ -22,10 +26,27 @@ class Base {
             return false;
         }
     }
+    /**
+     * 解析数据
+     * @param {object} ctx
+     */
     getData(c) {
-        console.log(`${u.getTime()} --> ${c.request.url} --> ${JSON.stringify(c.query)} `);
-        this.checkAuth(c.query.token);
-        return c.query;
+        console.log(`${this.getTime()} --> ${c.request.url} --> ${JSON.stringify(c.request.body)} `);
+        return c.request.body;
+    }
+    /**
+     * 返回数据格式化
+     * @param {string} data 返回数据
+     */
+    sendJson(data) {
+        return { code: '200', msg: 'success', data: data };
+    }
+    /**
+     * 返回错误数据
+     * @param {string} msg 提示语
+     */
+    sendErrorJson(msg) {
+        return { code: '400', msg: msg, data: {} };
     }
 }
 exports.default = Base;

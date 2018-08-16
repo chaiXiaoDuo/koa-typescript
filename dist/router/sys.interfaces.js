@@ -17,29 +17,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 * 2018-08-06 14:27:45
 ****************************************/
 const koa_router_1 = __importDefault(require("koa-router"));
-const Base_1 = __importDefault(require("../utils/Base"));
-class Sys extends Base_1.default {
+const system_server_1 = __importDefault(require("../server/system.server"));
+class Sys extends system_server_1.default {
     constructor() {
         super();
         this.router = new koa_router_1.default();
         this.login();
-        this.getToken();
         this.register();
     }
     login() {
-        this.router.get('/sys/login', (c) => __awaiter(this, void 0, void 0, function* () {
+        this.router.post('/sys/login', (c) => __awaiter(this, void 0, void 0, function* () {
             const req = this.getData(c);
-            c.response.body = c.query;
-        }));
-    }
-    getToken() {
-        this.router.post('/sys/getToken', (c) => __awaiter(this, void 0, void 0, function* () {
-            c.response.body = '/sys/getToken';
+            let result = yield this.canLogin(req);
+            if (result.length == 1) {
+                c.response.body = this.sendJson(result);
+            }
+            else {
+                c.response.body = this.sendErrorJson('用户名或密码错误');
+            }
         }));
     }
     register() {
         this.router.post('/sys/register', (c) => __awaiter(this, void 0, void 0, function* () {
-            c.response.body = '/sys/register';
+            const req = this.getData(c);
+            let isRepeat = yield this.checkRepeatUserName(req.userName);
+            if (isRepeat) {
+                c.response.body = this.sendErrorJson('用户名重复');
+            }
+            else {
+                let result = yield this.insertUser(req);
+                console.log(`${this.getTime()} --> create new user ${req.userName} --> ${JSON.stringify(result)}`);
+                c.response.body = this.sendJson({});
+            }
         }));
     }
     routes() {

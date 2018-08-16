@@ -52,5 +52,11 @@ class Utils {
         s = e.getSeconds() > 9 ? e.getSeconds() : '0' + e.getSeconds();
         return Y + '-' + M + '-' + D + ' ' + h + ':' + m + ':' + s;
     }
+    /**
+     * 获取时间戳
+     */
+    getTimeStamp() {
+        return +new Date();
+    }
 }
 exports.default = Utils;

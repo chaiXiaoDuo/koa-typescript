@@ -57,5 +57,12 @@ export default class Utils {
         return Y+'-'+M+'-'+D+' '+h+':'+m+':'+s;
     }
 
+    /**
+     * 获取时间戳
+     */
+    public getTimeStamp (): number{
+        return +new Date()
+    }
+
 }
 

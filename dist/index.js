@@ -18,15 +18,22 @@ const u = new Utils_1.default();
 const koa_router_1 = __importDefault(require("koa-router"));
 const router = new koa_router_1.default();
 const koa_bodyparser_1 = __importDefault(require("koa-bodyparser"));
+const koa2_cors_1 = __importDefault(require("koa2-cors"));
 router.get('/', (c, n) => __awaiter(this, void 0, void 0, function* () {
     u.success_log();
     c.response.body = u.fozu;
 }));
 const sys_interfaces_1 = __importDefault(require("./router/sys.interfaces"));
+// 设置跨域
+app.use(koa2_cors_1.default());
+// 设置请求体接收
+app.use(koa_bodyparser_1.default());
+// 启动路由
 app.use(new sys_interfaces_1.default().routes());
 app.use(router.routes());
-app.use(koa_bodyparser_1.default({
-    enableTypes: ['json', 'form', 'text']
-}));
-u.success_log();
-app.listen(8084);
+app.use(ctx => {
+    ctx.body = ctx.request.body;
+});
+app.listen(8084, () => {
+    u.success_log();
+});

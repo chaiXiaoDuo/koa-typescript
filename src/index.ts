@@ -9,6 +9,7 @@ const router = new Router()
 
 import bodyParser from 'koa-bodyparser'
 import ws from 'socket.io'
+import cors from 'koa2-cors'
 
 router.get('/',async (c,n) => {
     u.success_log()
@@ -17,13 +18,18 @@ router.get('/',async (c,n) => {
 
 import Sys from './router/sys.interfaces'
 
+// 设置跨域
+app.use(cors())
+// 设置请求体接收
+app.use(bodyParser())
+// 启动路由
 app.use(new Sys().routes())
 app.use(router.routes())
-app.use(bodyParser({
-    enableTypes:['json', 'form', 'text']
-}))
+app.use( ctx => {
+    ctx.body = ctx.request.body
+})
 
 
-u.success_log()
-
-app.listen(8084)
+app.listen(8084, () => {
+    u.success_log()
+})
